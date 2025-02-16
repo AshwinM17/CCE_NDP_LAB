@@ -1,0 +1,17 @@
+ashwin@AshwinUB:~/College/NDP Lab/220953128/LAB_3_NDP/Q1$ ./client
+Client PID: 22240, PPID: 19518
+hi
+hello
+Server: wow
+Server:  i can send messages
+wow I can recieve messages
+
+
+ashwin@AshwinUB:~/College/NDP Lab/220953128/LAB_3_NDP/Q1$ ./server
+Server is waiting for a connection...
+Server PID: 22178, PPID: 21233
+Client: hi
+Client: hello
+wow
+ i can send messages
+Client: wow I can recieve messages
