@@ -12,7 +12,7 @@
 int main() {
     int sock;
     struct sockaddr_in server_addr;
-    char message[MAX_BUF];
+    char message1[MAX_BUF], message2[MAX_BUF], response[MAX_BUF];
 
     // Create socket
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -27,23 +27,24 @@ int main() {
     // Connect to the server
     if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
         perror("Connection failed");
+        close(sock);
         exit(EXIT_FAILURE);
     }
 
     // Prompt user for two strings
     printf("Enter first string: ");
-    fgets(message, MAX_BUF, stdin);
-    message[strcspn(message, "\n")] = 0;  // Remove newline character
-    send(sock, message, strlen(message) + 1, 0);
+    fgets(message1, MAX_BUF, stdin);
+    message1[strcspn(message1, "\n")] = 0;  // Remove newline character
+    send(sock, message1, strlen(message1) + 1, 0);
 
     printf("Enter second string: ");
-    fgets(message, MAX_BUF, stdin);
-    message[strcspn(message, "\n")] = 0;  // Remove newline character
-    send(sock, message, strlen(message) + 1, 0);
+    fgets(message2, MAX_BUF, stdin);
+    message2[strcspn(message2, "\n")] = 0;  // Remove newline character
+    send(sock, message2, strlen(message2) + 1, 0);
 
     // Receive the response from the server
-    recv(sock, message, MAX_BUF, 0);
-    printf("Server response: %s\n", message);
+    recv(sock, response, MAX_BUF, 0);
+    printf("Server response: %s\n", response);
 
     // Close the socket
     close(sock);

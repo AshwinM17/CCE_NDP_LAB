@@ -1,0 +1,17 @@
+./server 
+Server listening on port 8080...
+Client connected: 127.0.0.1:35584
+Received: Institute Of
+Manipal Institute of Technology
+Client connected: 127.0.0.1:45082
+Received: Institute Of
+Manipal Institute of Technology
+More than 2 clients connected, terminating session...
+
+
+./client 
+Server response: Manipal Institute of Technology
+./client 
+Server response: Manipal Institute of Technology
+ ./client 
+Server response: terminate session

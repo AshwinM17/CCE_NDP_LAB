@@ -14,54 +14,48 @@
 int are_anagrams(char *str1, char *str2) {
     int count[256] = {0};
     
-    // If lengths are different, they cannot be anagrams
     if (strlen(str1) != strlen(str2)) {
         return 0;
     }
     
-    for (int i = 0; i < strlen(str1); i++) {
-        count[str1[i]]++;
-        count[str2[i]]--;
+    for (int i = 0; str1[i] && str2[i]; i++) {
+        count[(unsigned char)str1[i]]++;
+        count[(unsigned char)str2[i]]--;
     }
 
     for (int i = 0; i < 256; i++) {
         if (count[i] != 0) {
-            return 0; // Not anagrams
+            return 0;
         }
     }
-    return 1; // They are anagrams
+    return 1;
 }
 
 void handle_client(int client_sock, struct sockaddr_in client_addr) {
-    char client_message[MAX_BUF];
-    char response[MAX_BUF];
+    char str1[MAX_BUF], str2[MAX_BUF], response[MAX_BUF];
     time_t now;
     struct tm *tm_info;
 
     // Get the current time and date
     time(&now);
     tm_info = localtime(&now);
-
-    // Display date and time with client address
     printf("Connection from %s:%d at %s", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), asctime(tm_info));
 
     // Receive two strings from the client
-    recv(client_sock, client_message, MAX_BUF, 0);
-    printf("Received first string: %s\n", client_message);
-    recv(client_sock, client_message, MAX_BUF, 0);
-    printf("Received second string: %s\n", client_message);
+    recv(client_sock, str1, MAX_BUF, 0);
+    printf("Received first string: %s\n", str1);
+    recv(client_sock, str2, MAX_BUF, 0);
+    printf("Received second string: %s\n", str2);
 
     // Check if the strings are anagrams
-    if (are_anagrams(client_message, client_message)) {
+    if (are_anagrams(str1, str2)) {
         strcpy(response, "The strings are anagrams.\n");
     } else {
         strcpy(response, "The strings are not anagrams.\n");
     }
 
     // Send the response to the client
-    send(client_sock, response, strlen(response), 0);
-
-    // Close the client socket
+    send(client_sock, response, strlen(response) + 1, 0);
     close(client_sock);
 }
 
@@ -69,10 +63,18 @@ int main() {
     int server_sock, client_sock;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_len = sizeof(client_addr);
+    int opt = 1;
 
     // Create server socket
     if ((server_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         perror("Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Set socket option to reuse address
+    if (setsockopt(server_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
+        perror("setsockopt failed");
+        close(server_sock);
         exit(EXIT_FAILURE);
     }
 
@@ -83,12 +85,14 @@ int main() {
     // Bind the server socket
     if (bind(server_sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
         perror("Bind failed");
+        close(server_sock);
         exit(EXIT_FAILURE);
     }
 
     // Listen for incoming connections
     if (listen(server_sock, MAX_CLIENTS) == -1) {
         perror("Listen failed");
+        close(server_sock);
         exit(EXIT_FAILURE);
     }
 
@@ -101,12 +105,9 @@ int main() {
             perror("Accept failed");
             continue;
         }
-
-        // Handle client request
         handle_client(client_sock, client_addr);
     }
 
-    // Close the server socket
     close(server_sock);
     return 0;
 }
