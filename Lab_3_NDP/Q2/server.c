@@ -48,6 +48,8 @@ int main() {
     strcpy(server_addr.sun_path, SOCKET_PATH);
 
     // Bind the socket to the server address
+
+    unlink(SOCKET_PATH); 
     if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
         perror("Binding failed");
         close(server_socket);

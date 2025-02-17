@@ -13,4 +13,3 @@ Permutation: ehl
 Permutation: elh
 Permutation: leh
 Permutation: lhe
-^C
