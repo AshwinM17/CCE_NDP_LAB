@@ -60,6 +60,13 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    // Set SO_REUSEADDR option to avoid binding errors on restart
+    int opt = 1;
+    if (setsockopt(server_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
+        perror("setsockopt failed");
+        exit(EXIT_FAILURE);
+    }
+
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(PORT);
@@ -79,6 +86,7 @@ int main() {
     printf("Server listening on port %d...\n", PORT);
 
     while (1) {
+        c = sizeof(struct sockaddr_in);
         client_sock = accept(server_sock, (struct sockaddr *)&client_addr, (socklen_t*)&c);
         if (client_sock < 0) {
             perror("Client accept failed");
@@ -105,6 +113,8 @@ int main() {
             perror("Thread creation failed");
             continue;
         }
+
+        pthread_detach(thread_id); // Avoid memory leaks by detaching threads
     }
 
     close(server_sock);
