@@ -1,0 +1,11 @@
+$ ./server
+Calculated parity: 0
+Server listening on port 8080
+Data sent: 10101010
+
+
+$ .
+/client 
+Data received: Hello, World!114E
+Calculated CRC: 114E
+Data is not corrupted.
