@@ -1,0 +1,3 @@
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_4_NDP/Q2$ ./client 
+Enter domain name to resolve: google.com
+IP Address: 124.250.12.78

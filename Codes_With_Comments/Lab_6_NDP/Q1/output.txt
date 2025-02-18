@@ -1,0 +1,10 @@
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_6_NDP/Q1$ ./client 
+Data received: 10101010
+Calculated parity: 0
+Data is not corrupted.
+
+
+$ ./server
+Calculated parity: 0
+Server listening on port 8080
+Data sent: 10101010

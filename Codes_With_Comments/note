@@ -1,0 +1,103 @@
+### Lab 1: Basic Socket Programming
+
+- Introduced fundamental socket programming concepts.
+- Implemented a simple client-server model using TCP sockets.
+- Server:
+  - Created a socket, bound it to an address, and listened for connections.
+  - Accepted client connections and handled them sequentially.
+- Client:
+  - Created a socket and connected to the server.
+  - Sent and received data.
+- Focus: Basic socket operations (socket(), bind(), listen(), accept(), connect(), send(), recv()).
+
+### Lab 2: Multi-client Server with Concurrent Processing
+
+- Enhanced the server to handle multiple clients concurrently using fork().
+- Server:
+  - Created child processes for each client connection.
+  - Implemented simple data processing (e.g., string manipulation).
+- Client:
+  - Similar to Lab 1, but with more complex data exchange.
+- Key Difference: Introduction of concurrent processing using fork().
+
+### Lab 3: UNIX Domain Sockets and Inter-Process Communication
+
+- Shifted from network sockets to UNIX domain sockets for IPC.
+- Implemented a server that generates permutations of received strings.
+- Used datagram sockets (SOCK_DGRAM) instead of stream sockets.
+- Key Concepts:
+  - UNIX domain socket paths (/tmp/socket_server).
+  - Differences between network and UNIX domain sockets in addressing.
+
+### Lab 4: Multi-threaded Server with Shared Data
+
+- Introduced multi-threading using pthreads.
+- Implemented a server that manages student records.
+- Used mutex locks for thread-safe operations on shared data.
+- Client:
+  - Allowed users to search for student information.
+- Key Differences:
+  - Thread-based concurrency instead of process-based.
+  - Introduction of mutex for synchronization.
+
+### Lab 5: Advanced Socket Programming with Error Detection
+
+- Focused on error detection in data transmission.
+- Implemented two versions:
+  1. Parity bit checking
+  2. CRC (Cyclic Redundancy Check)
+- Server:
+  - Calculated parity/CRC for outgoing data.
+- Client:
+  - Verified received data integrity using parity/CRC.
+- Key Concepts:
+  - Simple error detection techniques.
+  - Difference between parity (single bit) and CRC (more robust) methods.
+
+### Lab 6: Error Correction using Hamming Code
+
+- Advanced to error correction techniques.
+- Implemented Hamming code for error detection and correction.
+- Server:
+  - Received Hamming-encoded data.
+  - Performed error correction.
+  - Decoded the original data.
+- Client:
+  - Sent Hamming-encoded data.
+  - Received both corrected encoded data and decoded original data.
+- Key Concepts:
+  - Hamming code principles.
+  - Error correction vs. mere detection.
+
+### Key Differences and Progression:
+
+1. Communication Protocols:
+   - Labs 1-2: TCP/IP networking
+   - Lab 3: UNIX domain sockets
+   - Labs 4-6: Back to TCP/IP with focus on data integrity
+
+2. Concurrency Models:
+   - Lab 1: Sequential processing
+   - Lab 2: Process-based concurrency (fork())
+   - Lab 4: Thread-based concurrency (pthreads)
+
+3. Error Handling:
+   - Labs 1-4: Basic error checking on socket operations
+   - Lab 5: Introduced data integrity checks (parity and CRC)
+   - Lab 6: Advanced to error correction (Hamming code)
+
+4. Data Processing:
+   - Progressed from simple string echoing to complex operations like permutations, database queries, and error correction algorithms.
+
+5. Client-Server Interaction:
+   - Evolved from basic request-response to more complex protocols, especially in later labs with error detection and correction.
+
+6. Socket Types:
+   - Mostly used SOCK_STREAM (TCP), except in Lab 3 which used SOCK_DGRAM with UNIX domain sockets.
+
+7. Addressing:
+   - Shifted between IP addressing (Labs 1, 2, 4, 5, 6) and file system paths (Lab 3) for UNIX domain sockets.
+
+8. Programming Concepts:
+   - Introduced progressively more advanced concepts: process management, threading, synchronization, bitwise operations (for CRC and Hamming code).
+

@@ -1,0 +1,27 @@
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_5_NDP/Q2$ ./server 
+Server listening on port 8080...
+Connection from 127.0.0.1:50416 at Tue Feb 18 01:35:56 2025
+Received first string: hello
+Received second string: hi
+Connection from 127.0.0.1:58642 at Tue Feb 18 01:36:03 2025
+Received first string: hel
+Received second string: leh
+Connection from 127.0.0.1:46342 at Tue Feb 18 01:36:09 2025
+Received first string: ghjk
+Received second string: ghjk
+
+
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_5_NDP/Q2$ ./client 
+Enter first string: hello
+Enter second string: hi
+Server response: The strings are not anagrams.
+
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_5_NDP/Q2$ ./client 
+Enter first string: hel
+Enter second string: leh
+Server response: The strings are anagrams.
+
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_5_NDP/Q2$ ./client 
+Enter first string: ghjk
+Enter second string: ghjk
+Server response: The strings are anagrams.

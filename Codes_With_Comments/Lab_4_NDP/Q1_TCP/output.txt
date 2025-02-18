@@ -1,0 +1,19 @@
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_4_NDP/Q1_TCP$ ./client 
+
+Enter option (1: Registration Number, 2: Name, 3: Subject Code, 0: Exit): 1
+Enter corresponding detail: S101
+Server Response: Reg No: S101, Name: Alice, Subject Code: CS101, PID: 30989
+
+Enter option (1: Registration Number, 2: Name, 3: Subject Code, 0: Exit): 2
+Enter corresponding detail: Bob
+Server Response: Name: Bob, Reg No: S102, Subject Code: CS102, PID: 30989
+
+Enter option (1: Registration Number, 2: Name, 3: Subject Code, 0: Exit): 1
+Enter corresponding detail: S101
+Server Response: Reg No: S101, Name: Alice, Subject Code: CS101, PID: 30989
+
+Enter option (1: Registration Number, 2: Name, 3: Subject Code, 0: Exit): 3
+Enter corresponding detail: CS103
+Server Response: Subject Code: CS103, Name: Charlie, Reg No: S103, PID: 30989
+
+Enter option (1: Registration Number, 2: Name, 3: Subject Code, 0: Exit): ^C
