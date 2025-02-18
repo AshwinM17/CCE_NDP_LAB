@@ -1,9 +1,6 @@
-$ ./server
-Calculated parity: 0
+Calculated CRC: 114E
 Server listening on port 8080
-Data sent: 10101010
-
-
+Data sent: Hello, World!114E
 $ .
 /client 
 Data received: Hello, World!114E
