@@ -1,0 +1,10 @@
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_6_NDP/Q3$ ./server 
+Listening on 8080...
+Received Hamming code: 1100001
+Corrected Hamming code: 1101001
+Decoded (original) data: 0001
+
+
+ashwin@AshwinUB:~/College/NDP Lab/CCE_NDP_LAB/CCE_NDP_LAB/Lab_6_NDP/Q3$ ./client 
+Enter Hamming encoded data: 1100001
+Corrected Hamming Encoded Data: 1101001
