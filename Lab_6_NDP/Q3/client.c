@@ -10,7 +10,7 @@
 int main() {
     int sock;
     struct sockaddr_in server;
-    char data[BUF], response[BUF];
+    char data[BUF], response[BUF * 2];
 
     // Create socket
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -36,9 +36,15 @@ int main() {
     // Send data to server
     send(sock, data, strlen(data) + 1, 0);
 
-    // Receive corrected Hamming code
-    recv(sock, response, BUF, 0);
-    printf("Corrected Hamming Encoded Data: %s\n", response);
+    // Receive corrected Hamming code and decoded data
+    recv(sock, response, sizeof(response), 0);
+    
+    // Split the response into corrected Hamming code and decoded data
+    char *corrected_hamming = strtok(response, "|");
+    char *decoded_data = strtok(NULL, "|");
+
+    printf("Corrected Hamming Encoded Data: %s\n", corrected_hamming);
+    printf("Decoded (Original) Data: %s\n", decoded_data);
 
     close(sock);
     return 0;

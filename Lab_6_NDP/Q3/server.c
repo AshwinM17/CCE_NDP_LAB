@@ -25,25 +25,24 @@ void hamming_correct(char *data) {
 }
 
 // Function to decode the received data (remove parity bits and extract actual data)
-void decode_data(char *data) {
+char* decode_data(char *data) {
     int i, j = 0;
     int len = strlen(data);
-    char decoded_data[BUF];  // Temporary buffer to hold decoded data
+    static char decoded_data[BUF];  // Static buffer to hold decoded data
 
     // Decode: Remove the parity bits (positions 1, 2, 4, 8, etc.)
     for (i = 0; i < len; i++) {
         int pos = 1;
-        // Find the next parity bit position (1, 2, 4, 8, 16, etc.)
         while (pos <= i) pos *= 2;
         
-        if (i + 1 != pos) {  // Skip parity bits (i+1 is the 1-based index)
-            decoded_data[j++] = data[i];  // Collect the data bits (skipping parity bit positions)
+        if (i + 1 != pos) {
+            decoded_data[j++] = data[i];
         }
     }
-    decoded_data[j] = '\0'; // Null-terminate the string
+    decoded_data[j] = '\0';
 
-    // Copy decoded data to the passed buffer
-    printf("Decoded (original) data: %s\n", decoded_data); // Log the decoded original data (after removing parity bits)
+    printf("Decoded (original) data: %s\n", decoded_data);
+    return decoded_data;
 }
 
 int main() {
@@ -68,8 +67,13 @@ int main() {
         printf("Received Hamming code: %s\n", buf); // Log the received Hamming code
         hamming_correct(buf);  // Correct errors using Hamming code
         printf("Corrected Hamming code: %s\n", buf); // Log the corrected Hamming code
-        decode_data(buf);      // Decode and store the actual decoded data
-        send(c, buf, strlen(buf) + 1, 0); // Send back the corrected Hamming code
+        char* decoded = decode_data(buf);      // Decode and store the actual decoded data
+        
+        // Send both corrected Hamming code and decoded data
+        char response[BUF * 2];
+        snprintf(response, sizeof(response), "%s|%s", buf, decoded);
+        send(c, response, strlen(response) + 1, 0);
+        
         close(c); // Close the client connection
     }
 
