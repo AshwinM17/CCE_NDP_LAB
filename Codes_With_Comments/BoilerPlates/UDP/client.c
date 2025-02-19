@@ -8,33 +8,58 @@
 #define BUFFER_SIZE 1024
 
 int main() {
-    int sockfd;
-    char buffer[BUFFER_SIZE];
-    struct sockaddr_in servaddr;
+    int sock = 0;
+    struct sockaddr_in serv_addr;
+    char buffer[BUFFER_SIZE] = {0};
+    socklen_t serv_len = sizeof(serv_addr);
 
-    // Creating socket file descriptor
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        perror("socket creation failed");
-        exit(EXIT_FAILURE);
+    // Create UDP socket
+    if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+        return -1;
     }
 
-    memset(&servaddr, 0, sizeof(servaddr));
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
 
-    // Filling server information
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(PORT);
-    servaddr.sin_addr.s_addr = INADDR_ANY;
+    // Convert IPv4 address from text to binary form
+    if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
+        printf("\nInvalid address/ Address not supported \n");
+        return -1;
+    }
 
-    int n, len;
+    while (1) {
+        printf("Enter message to send (or 'quit' to exit): ");
+        fgets(buffer, BUFFER_SIZE, stdin);
+        buffer[strcspn(buffer, "\n")] = 0; // Remove newline
 
-    sendto(sockfd, "Hello from client", strlen("Hello from client"),
-           MSG_CONFIRM, (const struct sockaddr *)&servaddr, sizeof(servaddr));
+        if (strcmp(buffer, "quit") == 0) {
+            break;
+        }
 
-    n = recvfrom(sockfd, (char *)buffer, BUFFER_SIZE, MSG_WAITALL, 
-                 (struct sockaddr *)&servaddr, &len);
-    buffer[n] = '\0';
-    printf("Server : %s\n", buffer);
+        // Send message to server
+        sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr *)&serv_addr, serv_len);
+        memset(buffer, 0, BUFFER_SIZE);
 
-    close(sockfd);
+        printf("Enter second message to send: ");
+        fgets(buffer, BUFFER_SIZE, stdin);
+        buffer[strcspn(buffer, "\n")] = 0; // Remove newline
+
+        // Send second message to server
+        sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr *)&serv_addr, serv_len);
+        memset(buffer, 0, BUFFER_SIZE);
+
+        // Receive response from server
+        int bytes_received = recvfrom(sock, buffer, BUFFER_SIZE - 1, 0, 
+                                      (struct sockaddr *)&serv_addr, &serv_len);
+        if (bytes_received > 0) {
+            buffer[bytes_received] = '\0'; // Null-terminate the received data
+            printf("Received message: %s\n", buffer);
+        }
+        memset(buffer, 0, BUFFER_SIZE); // Clear the buffer after processing
+    }
+
+    close(sock);
     return 0;
 }

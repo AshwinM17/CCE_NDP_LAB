@@ -8,40 +8,68 @@
 #define BUFFER_SIZE 1024
 
 int main() {
-    int sockfd;
+    int server_fd;
+    struct sockaddr_in server_addr, client_addr;
     char buffer[BUFFER_SIZE];
-    struct sockaddr_in servaddr, cliaddr;
+    socklen_t client_len = sizeof(client_addr);
 
-    // Creating socket file descriptor
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-        perror("socket creation failed");
+    // Create UDP socket
+    if ((server_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
-    memset(&servaddr, 0, sizeof(servaddr));
-    memset(&cliaddr, 0, sizeof(cliaddr));
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
 
-    // Filling server information
-    servaddr.sin_family = AF_INET; // IPv4
-    servaddr.sin_addr.s_addr = INADDR_ANY;
-    servaddr.sin_port = htons(PORT);
-
-    // Bind the socket with the server address
-    if (bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
+    // Bind the socket to the network address and port
+    if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
 
-    int len, n;
-    len = sizeof(cliaddr);
+    printf("UDP Server listening on port %d\n", PORT);
 
-    n = recvfrom(sockfd, (char *)buffer, BUFFER_SIZE, MSG_WAITALL, 
-                 (struct sockaddr *)&cliaddr, &len);
-    buffer[n] = '\0';
-    printf("Client : %s\n", buffer);
-    sendto(sockfd, "Hello from server", strlen("Hello from server"), 
-           MSG_CONFIRM, (const struct sockaddr *)&cliaddr, len);
+    while (1) {
+        int bytes_received;
 
-    close(sockfd);
+        // Receive data from client
+        bytes_received = recvfrom(server_fd, buffer, BUFFER_SIZE, 0, 
+                                  (struct sockaddr *)&client_addr, &client_len);
+        if (bytes_received < 0) {
+            perror("recvfrom failed");
+            continue;
+        }
+        buffer[bytes_received] = '\0';
+        printf("Received 1: %s\n", buffer);
+
+        // Receive second message
+        bytes_received = recvfrom(server_fd, buffer, BUFFER_SIZE, 0, 
+                                  (struct sockaddr *)&client_addr, &client_len);
+        if (bytes_received < 0) {
+            perror("recvfrom failed");
+            continue;
+        }
+        buffer[bytes_received] = '\0';
+        printf("Received 2: %s\n", buffer);
+
+        // Get message to send
+        printf("Message to send: ");
+        fgets(buffer, BUFFER_SIZE, stdin);
+        buffer[strcspn(buffer, "\n")] = 0;  // Remove newline
+
+        // Send response back to client
+        ssize_t bytes_sent = sendto(server_fd, buffer, strlen(buffer), 0, 
+                                    (struct sockaddr *)&client_addr, client_len);
+        if (bytes_sent < 0) {
+            perror("sendto failed");
+        } else {
+            printf("Sent message: %s\n", buffer);
+        }
+    }
+
+    close(server_fd);
     return 0;
 }
