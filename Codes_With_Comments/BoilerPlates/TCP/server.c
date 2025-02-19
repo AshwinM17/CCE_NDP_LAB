@@ -5,14 +5,16 @@
 #include <arpa/inet.h>
 
 #define PORT 8080
-#define BUFFER_SIZE 1024
+#define MAX_ROWS 10
+#define MAX_COLS 10
 
 int main() {
     int server_fd, new_socket;
     struct sockaddr_in address;
     int opt = 1;
     int addrlen = sizeof(address);
-    char buffer[BUFFER_SIZE] = {0};
+    int matrix[MAX_ROWS][MAX_COLS];
+    int rows, cols;
 
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
@@ -25,7 +27,6 @@ int main() {
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
-    
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(PORT);
@@ -43,10 +44,27 @@ int main() {
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    read(new_socket, buffer, BUFFER_SIZE);
-    printf("Message from client: %s\n", buffer);
-    send(new_socket, "Hello from server", strlen("Hello from server"), 0);
-    
+
+    // Receive matrix dimensions
+    int dims[2];
+    recv(new_socket, dims, sizeof(dims), 0);
+    rows = dims[0];
+    cols = dims[1];
+
+    // Receive matrix
+    for (int i = 0; i < rows; i++) {
+        recv(new_socket, matrix[i], cols * sizeof(int), 0);
+    }
+
+    // Print received matrix
+    printf("Received matrix:\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
     close(new_socket);
     close(server_fd);
     return 0;

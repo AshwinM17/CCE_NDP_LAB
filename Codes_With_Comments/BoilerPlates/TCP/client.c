@@ -5,13 +5,15 @@
 #include <arpa/inet.h>
 
 #define PORT 8080
-#define BUFFER_SIZE 1024
+#define ROWS 3
+#define COLS 3
 
 int main() {
     int sock = 0;
     struct sockaddr_in serv_addr;
-    char buffer[BUFFER_SIZE] = {0};
+    int matrix[ROWS][COLS] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
+    // Create socket
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
         return -1;
@@ -26,14 +28,23 @@ int main() {
         return -1;
     }
 
+    // Connect to server
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
         printf("\nConnection Failed \n");
         return -1;
     }
-    send(sock, "Hello from client", strlen("Hello from client"), 0);
-    read(sock, buffer, BUFFER_SIZE);
-    printf("Message from server: %s\n", buffer);
-    
+
+    // Send matrix dimensions
+    int dims[2] = {ROWS, COLS};
+    send(sock, dims, sizeof(dims), 0);
+
+    // Send matrix
+    for (int i = 0; i < ROWS; i++) {
+        send(sock, matrix[i], COLS * sizeof(int), 0);
+    }
+
+    printf("Matrix sent to server.\n");
+
     close(sock);
     return 0;
 }

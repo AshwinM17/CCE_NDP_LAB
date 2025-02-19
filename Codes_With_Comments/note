@@ -1,3 +1,10 @@
+### functions
+```
+char *strtok(char *str, const char *delims);
+```
+to split strings as delims as a string for delimiter
+
+
 ### Lab 1: Basic Socket Programming
 
 - Introduced fundamental socket programming concepts.
