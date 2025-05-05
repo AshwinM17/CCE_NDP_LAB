@@ -1,8 +1,0 @@
-Calculated CRC: 114E
-Server listening on port 8080
-Data sent: Hello, World!114E
-$ .
-/client 
-Data received: Hello, World!114E
-Calculated CRC: 114E
-Data is not corrupted.
